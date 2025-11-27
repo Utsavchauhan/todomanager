@@ -5,11 +5,12 @@ import os
 from datetime import datetime
 from typing import Optional, List, Dict
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)  # Enable CORS for API requests
 
-# Database file path
-DB_PATH = 'data/todo_manager.db'
+# Database file path - use absolute path for cloud deployment
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'data', 'todo_manager.db')
 
 def get_db_connection():
     """Get database connection"""
@@ -63,7 +64,15 @@ init_database()
 @app.route('/')
 def index():
     """Serve the main HTML page"""
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        return f"Error loading template: {str(e)}", 500
+
+@app.route('/health')
+def health():
+    """Health check endpoint"""
+    return jsonify({'status': 'ok', 'message': 'Todo Manager API is running'}), 200
 
 @app.route('/api/todos', methods=['GET'])
 def get_all_todos():
@@ -221,6 +230,38 @@ def delete_todo(todo_id):
         return jsonify({'error': str(e)}), 500
 
 # For production deployment, use: gunicorn app:app
-# The app variable is the WSGI application
-# For local development, you can still run: python app.py (but it won't start server)
+# The app variable is the WSGI application that platforms will use
+# For local development only, run: python app.py
+if __name__ == '__main__':
+    # Only run development server in local environment
+    # Production platforms (like Streamlit Cloud, Heroku, etc.) will use gunicorn
+    import socket
+    
+    def find_free_port(start_port):
+        """Find an available port starting from start_port"""
+        for port in range(start_port, start_port + 100):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    s.bind(('0.0.0.0', port))
+                    return port
+            except OSError:
+                continue
+        return None
+    
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Try to use the specified port, or find a free one
+    try:
+        app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
+    except OSError as e:
+        if "Address already in use" in str(e):
+            free_port = find_free_port(5000)
+            if free_port:
+                print(f"Port {port} is in use, using port {free_port} instead")
+                app.run(debug=True, host='0.0.0.0', port=free_port, use_reloader=False)
+            else:
+                print("No available ports found")
+                raise
+        else:
+            raise
 
