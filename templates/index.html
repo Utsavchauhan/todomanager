@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo Manager</title>
+    <title>Todo Manager - Modern & Interactive</title>
     <style>
         * {
             margin: 0;
@@ -11,32 +11,186 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #4facfe;
+            --danger: #f5576c;
+            --warning: #ff9800;
+            --dark: #2d3748;
+            --light: #f7fafc;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            transition: all 0.3s ease;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
-        h1 {
-            color: white;
+        .header {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.5em;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: fadeInDown 0.6s ease;
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            display: block;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #d1d5db;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
         }
         
         .todo-form {
             background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .todo-form.collapsed {
+            max-height: 60px;
+            overflow: hidden;
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .form-header h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+        
+        .toggle-form {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-form:hover {
+            transform: scale(1.05);
         }
         
         .form-group {
@@ -57,9 +211,10 @@
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
         
         input[type="text"]:focus,
@@ -67,7 +222,8 @@
         select:focus,
         input[type="date"]:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
         textarea {
@@ -77,25 +233,26 @@
         
         .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             padding: 12px 30px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         
         button:active {
@@ -110,23 +267,51 @@
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
         
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
         .todos-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
         
         .todo-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .todo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
         }
         
         .todo-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.02);
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .todo-card:hover::before {
+            width: 6px;
+        }
+        
+        .todo-card.completed {
+            opacity: 0.7;
         }
         
         .todo-header {
@@ -138,25 +323,33 @@
         
         .todo-title {
             font-size: 1.3em;
-            font-weight: 600;
+            font-weight: 700;
             color: #333;
             flex: 1;
+            margin-right: 10px;
         }
         
         .todo-frequency {
-            background: #667eea;
+            background: var(--primary);
             color: white;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
+            font-size: 0.75em;
+            font-weight: 700;
             text-transform: uppercase;
+            white-space: nowrap;
         }
+        
+        .todo-frequency.daily { background: #4caf50; }
+        .todo-frequency.weekly { background: #2196f3; }
+        .todo-frequency.monthly { background: #ff9800; }
+        .todo-frequency.yearly { background: #9c27b0; }
         
         .todo-description {
             color: #666;
             margin-bottom: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-size: 0.95em;
         }
         
         .todo-meta {
@@ -165,10 +358,12 @@
             align-items: center;
             margin-bottom: 15px;
             font-size: 0.9em;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .todo-status {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.85em;
@@ -191,37 +386,44 @@
         
         .todo-goal-date {
             color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .todo-actions {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         .todo-actions button {
             flex: 1;
-            padding: 8px;
+            min-width: 100px;
+            padding: 10px;
             font-size: 0.9em;
         }
         
         .message {
-            padding: 15px;
-            border-radius: 5px;
+            padding: 15px 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
             display: none;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .message.success {
             background: #c8e6c9;
             color: #2e7d32;
-            border: 1px solid #4caf50;
+            border-left: 4px solid #4caf50;
         }
         
         .message.error {
             background: #ffcdd2;
             color: #c62828;
-            border: 1px solid #f44336;
+            border-left: 4px solid #f44336;
         }
         
         .empty-state {
@@ -229,9 +431,63 @@
             padding: 60px 20px;
             color: white;
             font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+        
+        .sort-options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .sort-select {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -239,58 +495,129 @@
             .todos-container {
                 grid-template-columns: 1fr;
             }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📝 Todo Manager</h1>
+        <div class="header">
+            <h1>✨ Todo Manager</h1>
+            <p style="font-size: 1.1em; opacity: 0.9;">Stay organized, stay productive</p>
+        </div>
+        
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <span class="stat-number" id="totalTodos">0</span>
+                <span>Total</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="openTodos">0</span>
+                <span>Open</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="progressTodos">0</span>
+                <span>In Progress</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="completedTodos">0</span>
+                <span>Completed</span>
+            </div>
+        </div>
         
         <div id="message" class="message"></div>
         
-        <div class="todo-form">
-            <h2 style="margin-bottom: 20px; color: #333;">Create New Todo</h2>
-            <form id="todoForm">
-                <div class="form-group">
-                    <label for="title">Title *</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description"></textarea>
-                </div>
-                
-                <div class="form-row">
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search todos..." oninput="filterTodos()">
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn active" onclick="setFilter('all')">All</button>
+                <button class="filter-btn" onclick="setFilter('open')">Open</button>
+                <button class="filter-btn" onclick="setFilter('in_progress')">In Progress</button>
+                <button class="filter-btn" onclick="setFilter('completed')">Completed</button>
+            </div>
+            <div class="sort-options">
+                <select class="sort-select" id="sortSelect" onchange="sortTodos()">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="status">By Status</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="todo-form" id="todoFormContainer">
+            <div class="form-header" onclick="toggleForm()">
+                <h2>➕ Create New Todo</h2>
+                <button type="button" class="toggle-form btn-small" id="toggleBtn">−</button>
+            </div>
+            <div id="formContent">
+                <form id="todoForm">
                     <div class="form-group">
-                        <label for="frequency">Frequency *</label>
-                        <select id="frequency" name="frequency" required>
-                            <option value="">Select frequency</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="yearly">Yearly</option>
-                        </select>
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" name="title" required placeholder="What needs to be done?">
                     </div>
                     
                     <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" name="status">
-                            <option value="open">Open</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                        </select>
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" placeholder="Add more details..."></textarea>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="goalDate">Goal Date</label>
-                    <input type="date" id="goalDate" name="goalDate">
-                </div>
-                
-                <button type="submit">Create Todo</button>
-                <button type="button" class="btn-secondary" onclick="resetForm()" style="margin-left: 10px;">Reset</button>
-            </form>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="frequency">Frequency *</label>
+                            <select id="frequency" name="frequency" required>
+                                <option value="">Select frequency</option>
+                                <option value="daily">📅 Daily</option>
+                                <option value="weekly">📆 Weekly</option>
+                                <option value="monthly">📊 Monthly</option>
+                                <option value="yearly">🎯 Yearly</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="open">🟡 Open</option>
+                                <option value="in_progress">🔵 In Progress</option>
+                                <option value="completed">🟢 Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goalDate">Goal Date</label>
+                            <input type="date" id="goalDate" name="goalDate">
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit">✨ Create Todo</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm()">🔄 Reset</button>
+                    </div>
+                </form>
+            </div>
         </div>
         
         <div id="todosContainer" class="todos-container">
@@ -298,12 +625,17 @@
         </div>
         
         <div id="emptyState" class="empty-state" style="display: none;">
-            <p>No todos yet. Create your first todo above! 🎯</p>
+            <p style="font-size: 2em; margin-bottom: 10px;">🎯</p>
+            <p>No todos found. Create your first todo above!</p>
         </div>
     </div>
     
     <script>
         const API_BASE = '/api/todos';
+        let allTodos = [];
+        let currentFilter = 'all';
+        let currentSort = 'newest';
+        let searchQuery = '';
         
         // Load todos on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -314,13 +646,32 @@
                 e.preventDefault();
                 createTodo();
             });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    if (e.key === 'k') {
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                    }
+                }
+            });
         });
+        
+        function toggleForm() {
+            const form = document.getElementById('todoFormContainer');
+            const btn = document.getElementById('toggleBtn');
+            form.classList.toggle('collapsed');
+            btn.textContent = form.classList.contains('collapsed') ? '+' : '−';
+        }
         
         function loadTodos() {
             fetch(API_BASE)
                 .then(response => response.json())
                 .then(data => {
-                    displayTodos(data);
+                    allTodos = data;
+                    updateStats();
+                    displayTodos();
                 })
                 .catch(error => {
                     showMessage('Error loading todos: ' + error.message, 'error');
@@ -328,11 +679,75 @@
                 });
         }
         
-        function displayTodos(todos) {
+        function updateStats() {
+            const total = allTodos.length;
+            const open = allTodos.filter(t => t.status === 'open').length;
+            const progress = allTodos.filter(t => t.status === 'in_progress').length;
+            const completed = allTodos.filter(t => t.status === 'completed').length;
+            
+            document.getElementById('totalTodos').textContent = total;
+            document.getElementById('openTodos').textContent = open;
+            document.getElementById('progressTodos').textContent = progress;
+            document.getElementById('completedTodos').textContent = completed;
+        }
+        
+        function filterTodos() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            displayTodos();
+        }
+        
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            displayTodos();
+        }
+        
+        function sortTodos() {
+            currentSort = document.getElementById('sortSelect').value;
+            displayTodos();
+        }
+        
+        function displayTodos() {
+            let filtered = allTodos.filter(todo => {
+                // Filter by status
+                if (currentFilter !== 'all' && todo.status !== currentFilter) {
+                    return false;
+                }
+                
+                // Filter by search query
+                if (searchQuery) {
+                    const searchLower = searchQuery.toLowerCase();
+                    return todo.title.toLowerCase().includes(searchLower) ||
+                           (todo.description && todo.description.toLowerCase().includes(searchLower));
+                }
+                
+                return true;
+            });
+            
+            // Sort todos
+            filtered.sort((a, b) => {
+                switch(currentSort) {
+                    case 'newest':
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    case 'oldest':
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    case 'title':
+                        return a.title.localeCompare(b.title);
+                    case 'status':
+                        const statusOrder = { 'open': 1, 'in_progress': 2, 'completed': 3 };
+                        return statusOrder[a.status] - statusOrder[b.status];
+                    default:
+                        return 0;
+                }
+            });
+            
             const container = document.getElementById('todosContainer');
             const emptyState = document.getElementById('emptyState');
             
-            if (todos.length === 0) {
+            if (filtered.length === 0) {
                 container.style.display = 'none';
                 emptyState.style.display = 'block';
                 return;
@@ -342,53 +757,42 @@
             emptyState.style.display = 'none';
             container.innerHTML = '';
             
-            todos.forEach(todo => {
+            filtered.forEach((todo, index) => {
                 const card = createTodoCard(todo);
+                card.style.animationDelay = `${index * 0.05}s`;
                 container.appendChild(card);
             });
         }
         
         function createTodoCard(todo) {
             const card = document.createElement('div');
-            card.className = 'todo-card';
-            
-            const frequencyColors = {
-                'daily': '#4caf50',
-                'weekly': '#2196f3',
-                'monthly': '#ff9800',
-                'yearly': '#9c27b0'
-            };
+            card.className = `todo-card ${todo.status === 'completed' ? 'completed' : ''}`;
             
             const statusLabels = {
-                'open': 'Open',
-                'in_progress': 'In Progress',
-                'completed': 'Completed'
+                'open': '🟡 Open',
+                'in_progress': '🔵 In Progress',
+                'completed': '🟢 Completed'
             };
             
             const goalDate = todo.goal_date ? new Date(todo.goal_date).toLocaleDateString() : 'Not set';
+            const isOverdue = todo.goal_date && new Date(todo.goal_date) < new Date() && todo.status !== 'completed';
             
             card.innerHTML = `
                 <div class="todo-header">
                     <div class="todo-title">${escapeHtml(todo.title)}</div>
-                    <span class="todo-frequency" style="background: ${frequencyColors[todo.frequency]}">
-                        ${todo.frequency}
-                    </span>
+                    <span class="todo-frequency ${todo.frequency}">${todo.frequency}</span>
                 </div>
                 ${todo.description ? `<div class="todo-description">${escapeHtml(todo.description)}</div>` : ''}
                 <div class="todo-meta">
                     <span class="todo-status status-${todo.status}">${statusLabels[todo.status]}</span>
-                    <span class="todo-goal-date">🎯 ${goalDate}</span>
+                    <span class="todo-goal-date" style="${isOverdue ? 'color: #f44336; font-weight: 600;' : ''}">
+                        🎯 ${isOverdue ? '⚠️ ' : ''}${goalDate}
+                    </span>
                 </div>
                 <div class="todo-actions">
-                    <button class="btn-success" onclick="updateStatus(${todo.id}, 'in_progress')" 
-                        ${todo.status === 'in_progress' ? 'disabled' : ''}>
-                        In Progress
-                    </button>
-                    <button class="btn-success" onclick="updateStatus(${todo.id}, 'completed')"
-                        ${todo.status === 'completed' ? 'disabled' : ''}>
-                        Complete
-                    </button>
-                    <button class="btn-secondary" onclick="deleteTodo(${todo.id})">Delete</button>
+                    ${todo.status !== 'in_progress' ? `<button class="btn-success btn-small" onclick="updateStatus(${todo.id}, 'in_progress')">Start</button>` : ''}
+                    ${todo.status !== 'completed' ? `<button class="btn-success btn-small" onclick="updateStatus(${todo.id}, 'completed')">Complete</button>` : ''}
+                    <button class="btn-secondary btn-small" onclick="deleteTodo(${todo.id})">Delete</button>
                 </div>
             `;
             
@@ -404,6 +808,11 @@
                 goalDate: document.getElementById('goalDate').value || null
             };
             
+            const submitBtn = document.querySelector('#todoForm button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<span class="loading"></span> Creating...';
+            submitBtn.disabled = true;
+            
             fetch(API_BASE, {
                 method: 'POST',
                 headers: {
@@ -416,7 +825,7 @@
                 if (data.error) {
                     showMessage(data.error, 'error');
                 } else {
-                    showMessage('Todo created successfully!', 'success');
+                    showMessage('✨ Todo created successfully!', 'success');
                     resetForm();
                     loadTodos();
                 }
@@ -424,6 +833,10 @@
             .catch(error => {
                 showMessage('Error creating todo: ' + error.message, 'error');
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             });
         }
         
@@ -440,7 +853,7 @@
                 if (data.error) {
                     showMessage(data.error, 'error');
                 } else {
-                    showMessage('Todo status updated!', 'success');
+                    showMessage('✅ Todo status updated!', 'success');
                     loadTodos();
                 }
             })
@@ -463,7 +876,7 @@
                 if (data.error) {
                     showMessage(data.error, 'error');
                 } else {
-                    showMessage('Todo deleted successfully!', 'success');
+                    showMessage('🗑️ Todo deleted successfully!', 'success');
                     loadTodos();
                 }
             })
@@ -496,4 +909,3 @@
     </script>
 </body>
 </html>
-
